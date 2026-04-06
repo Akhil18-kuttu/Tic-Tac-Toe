@@ -1,0 +1,225 @@
+/* ============================================================
+   1. VARIABLES (THEMEING)
+   ============================================================ */
+:root {
+    /* --- DARK THEME (Default) --- */
+    --bg-color: #0f172a;       /* Page background (Slate 900) */
+    --card-bg: #1e293b;       /* Game card background (Slate 800) */
+    --text-main: #f8fafc;     /* Primary text color (Slate 50) */
+    --cell-bg: #334155;       /* Hover state for grid cells (Slate 700) */
+    --x-color: #818cf8;       /* Indigo for Player X */
+    --o-color: #fbbf24;       /* Amber for Player O */
+    --board-tray: #0f172a;    /* Color of the thin grid lines */
+    --border-color: rgba(255, 255, 255, 0.1);
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="light"] {
+    /* --- LIGHT THEME --- */
+    --bg-color: #f8fafc;      /* Page background (Slate 50) */
+    --card-bg: #ffffff;       /* Game card background (Pure White) */
+    --text-main: #1e293b;     /* Primary text color (Slate 800) */
+    --cell-bg: #f1f5f9;       /* Hover state for grid cells (Slate 100) */
+    --x-color: #4f46e5;       /* Deep Indigo for Player X */
+    --o-color: #d97706;       /* Deep Amber for Player O */
+    --board-tray: #e2e8f0;    /* Color of the thin grid lines (Slate 200) */
+    --border-color: #e2e8f0;
+    --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================================
+   2. GLOBAL STYLES
+   ============================================================ */
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-color);
+    transition: background-color 0.3s ease; /* Smooth transition when toggling themes */
+}
+
+/* ============================================================
+   3. THEME TOGGLE (SINGLE ICON)
+   ============================================================ */
+.theme-switch-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+
+.theme-toggle {
+    cursor: pointer;
+    width: 48px;
+    height: 48px;
+    background: var(--card-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%; /* Makes the toggle a perfect circle */
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow);
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1); /* Slight pop effect on hover */
+    background: var(--cell-bg);
+}
+
+.theme-toggle input {
+    display: none; /* Hide the actual checkbox functionality */
+}
+
+.icon-box {
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Smooth rotation animation */
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.rotate-icon {
+    transform: rotate(360deg); /* Triggered via JS during theme switch */
+}
+
+/* ============================================================
+   4. GAME CARD & SCOREBOARD
+   ============================================================ */
+.glass-card {
+    background: var(--card-bg);
+    padding: 2.5rem;
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    width: 90%;
+    max-width: 350px;
+    border: 1px solid var(--border-color);
+    position: relative; /* Necessary for the overlay positioning */
+    transition: background 0.3s ease, border 0.3s ease;
+}
+
+.scoreboard {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: var(--text-main);
+    opacity: 0.6;
+    text-transform: uppercase;
+}
+
+.score {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-main);
+    display: block;
+}
+
+#status {
+    color: var(--text-main);
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin-bottom: 25px;
+    text-align: center;
+    transition: color 0.3s ease;
+}
+
+/* ============================================================
+   5. TIC-TAC-TOE GRID
+   ============================================================ */
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px; /* Creates the minimalist "hairline" grid lines */
+    background: var(--board-tray);
+    border: 1px solid var(--board-tray);
+    border-radius: 12px;
+    overflow: hidden; /* Clips the cell corners to the board radius */
+}
+
+.cell {
+    aspect-ratio: 1 / 1;
+    background: var(--card-bg); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.5rem;
+    font-weight: 300; /* Thin modern look for X and O */
+    cursor: pointer;
+    transition: background 0.2s ease;
+    color: var(--text-main);
+}
+
+.cell:hover {
+    background: var(--cell-bg);
+}
+
+/* Player Specific Colors */
+.x-color { color: var(--x-color); }
+.o-color { color: var(--o-color); }
+
+/* ============================================================
+   6. WIN/DRAW OVERLAY
+   ============================================================ */
+.overlay {
+    position: absolute;
+    inset: 0; /* Stretches to fill the glass-card */
+    background: var(--card-bg);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 24px;
+    z-index: 10;
+}
+
+.hidden { 
+    display: none; 
+}
+
+.overlay-content h2 {
+    color: var(--text-main);
+    font-weight: 600;
+    margin-bottom: 25px;
+    font-size: 1.5rem;
+}
+
+#nextRoundBtn {
+    background: var(--x-color);
+    color: #ffffff;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+#nextRoundBtn:hover {
+    transform: translateY(-2px); /* Lift button slightly on hover */
+}
+
+/* Reset Link Style */
+#restartBtn {
+    margin-top: 30px;
+    background: transparent;
+    border: none;
+    color: var(--text-main);
+    opacity: 0.4;
+    font-size: 0.85rem;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+#restartBtn:hover {
+    opacity: 0.8;
+}
